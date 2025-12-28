@@ -8,7 +8,7 @@ interface AnalysisPanelProps {
   target: Product;
 }
 
-export const AnalysisPanel: React.FC<AnalysisPanelProps> = ({ analysis, source, target }) => {
+export const AnalysisPanel: React.FC<AnalysisPanelProps> = ({ analysis, source: _source, target: _target }) => {
   return (
     <div className="bg-white rounded-[3rem] p-10 lg:p-16 border border-[#E8E2D9] shadow-2xl shadow-[#A67C7C]/5">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
