@@ -1,4 +1,4 @@
-# DermaLogic AI
+# Skintellect AI
 
 An AI-powered cosmetics and beauty marketplace that helps users find product dupes, analyze ingredients, and make informed skincare decisions.
 
@@ -35,7 +35,7 @@ An AI-powered cosmetics and beauty marketplace that helps users find product dup
 1. Clone the repository:
    ```bash
    git clone <your-repo-url>
-   cd dermalogic-ai
+   cd skintellect-ai
    ```
 
 2. Install all dependencies:
@@ -76,7 +76,7 @@ An AI-powered cosmetics and beauty marketplace that helps users find product dup
 ## Project Structure
 
 ```
-dermalogic-ai/
+skintellect-ai/
 ├── client/                 # React frontend
 │   ├── src/
 │   │   ├── components/     # React components

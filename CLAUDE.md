@@ -1,8 +1,8 @@
-# CLAUDE.md - DermaLogic AI Project Guidelines
+# CLAUDE.md - Skintellect AI Project Guidelines
 
 ## Project Overview
 
-DermaLogic AI is an AI-powered cosmetics and beauty marketplace that helps users find product dupes, analyze ingredients, and make informed skincare decisions. Inspired by skinskoolbeauty.com.
+Skintellect AI is an AI-powered cosmetics and beauty marketplace that helps users find product dupes, analyze ingredients, and make informed skincare decisions. Inspired by skinskoolbeauty.com.
 
 ## Tech Stack
 

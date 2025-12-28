@@ -26,9 +26,9 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  CART: 'derma_logic_cart_v2',
-  WISHLIST: 'derma_logic_wishlist',
-  SAVED: 'derma_logic_saved'
+  CART: 'skintellect_cart_v2',
+  WISHLIST: 'skintellect_wishlist',
+  SAVED: 'skintellect_saved'
 } as const;
 
 function loadFromStorage<T>(key: string, defaultValue: T): T {

@@ -26,7 +26,7 @@ export const Navbar: React.FC<NavbarProps> = ({ cartCount }) => {
             <div className="flex items-center gap-10">
               <Link to="/" className="flex items-center gap-2">
                 <span className="text-2xl font-serif tracking-tight text-slate-900 font-semibold italic">
-                  DermaLogic<span className="text-[#A67C7C] font-normal not-italic">.</span>
+                  Skintellect<span className="text-[#A67C7C] font-normal not-italic">.</span>
                 </span>
               </Link>
 

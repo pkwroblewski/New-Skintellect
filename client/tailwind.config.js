@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        // DermaLogic brand colors
+        // Skintellect brand colors
         cream: {
           50: '#FDFCFA',
           100: '#FAF7F2',  // Primary background
