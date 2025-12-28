@@ -1,23 +1,32 @@
-import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
+
+export interface CartItem {
+  productId: string;
+  quantity: number;
+}
 
 interface CartContextType {
-  cart: string[];
+  cartItems: CartItem[];
   wishlist: string[];
   savedForLater: string[];
-  addToCart: (id: string) => void;
+  addToCart: (id: string, quantity?: number) => void;
   removeFromCart: (id: string) => void;
+  updateQuantity: (id: string, quantity: number) => void;
+  clearCart: () => void;
   toggleWishlist: (id: string) => void;
   toggleSaveForLater: (id: string) => void;
+  moveToCart: (id: string) => void;
   isInCart: (id: string) => boolean;
   isWishlisted: (id: string) => boolean;
   isSaved: (id: string) => boolean;
   cartCount: number;
+  getQuantity: (id: string) => number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 const STORAGE_KEYS = {
-  CART: 'derma_logic_cart',
+  CART: 'derma_logic_cart_v2',
   WISHLIST: 'derma_logic_wishlist',
   SAVED: 'derma_logic_saved'
 } as const;
@@ -33,7 +42,7 @@ function loadFromStorage<T>(key: string, defaultValue: T): T {
 }
 
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [cart, setCart] = useState<string[]>(() =>
+  const [cartItems, setCartItems] = useState<CartItem[]>(() =>
     loadFromStorage(STORAGE_KEYS.CART, [])
   );
   const [wishlist, setWishlist] = useState<string[]>(() =>
@@ -45,8 +54,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Persist to localStorage
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.CART, JSON.stringify(cart));
-  }, [cart]);
+    localStorage.setItem(STORAGE_KEYS.CART, JSON.stringify(cartItems));
+  }, [cartItems]);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.WISHLIST, JSON.stringify(wishlist));
@@ -56,44 +65,93 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     localStorage.setItem(STORAGE_KEYS.SAVED, JSON.stringify(savedForLater));
   }, [savedForLater]);
 
-  const addToCart = (id: string) => {
-    setCart(prev => [...prev, id]);
-  };
+  const addToCart = useCallback((id: string, quantity: number = 1) => {
+    setCartItems(prev => {
+      const existing = prev.find(item => item.productId === id);
+      if (existing) {
+        return prev.map(item =>
+          item.productId === id
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        );
+      }
+      return [...prev, { productId: id, quantity }];
+    });
+  }, []);
 
-  const removeFromCart = (id: string) => {
-    setCart(prev => prev.filter(item => item !== id));
-  };
+  const removeFromCart = useCallback((id: string) => {
+    setCartItems(prev => prev.filter(item => item.productId !== id));
+  }, []);
 
-  const toggleWishlist = (id: string) => {
+  const updateQuantity = useCallback((id: string, quantity: number) => {
+    if (quantity <= 0) {
+      removeFromCart(id);
+      return;
+    }
+    setCartItems(prev =>
+      prev.map(item =>
+        item.productId === id ? { ...item, quantity } : item
+      )
+    );
+  }, [removeFromCart]);
+
+  const clearCart = useCallback(() => {
+    setCartItems([]);
+  }, []);
+
+  const toggleWishlist = useCallback((id: string) => {
     setWishlist(prev =>
       prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
     );
-  };
+  }, []);
 
-  const toggleSaveForLater = (id: string) => {
+  const toggleSaveForLater = useCallback((id: string) => {
     setSavedForLater(prev =>
       prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
     );
-  };
+  }, []);
 
-  const isInCart = (id: string) => cart.includes(id);
-  const isWishlisted = (id: string) => wishlist.includes(id);
-  const isSaved = (id: string) => savedForLater.includes(id);
+  const moveToCart = useCallback((id: string) => {
+    // Remove from wishlist/saved and add to cart
+    setWishlist(prev => prev.filter(item => item !== id));
+    setSavedForLater(prev => prev.filter(item => item !== id));
+    addToCart(id);
+  }, [addToCart]);
+
+  const isInCart = useCallback((id: string) =>
+    cartItems.some(item => item.productId === id), [cartItems]);
+
+  const isWishlisted = useCallback((id: string) =>
+    wishlist.includes(id), [wishlist]);
+
+  const isSaved = useCallback((id: string) =>
+    savedForLater.includes(id), [savedForLater]);
+
+  const getQuantity = useCallback((id: string) => {
+    const item = cartItems.find(item => item.productId === id);
+    return item?.quantity || 0;
+  }, [cartItems]);
+
+  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <CartContext.Provider
       value={{
-        cart,
+        cartItems,
         wishlist,
         savedForLater,
         addToCart,
         removeFromCart,
+        updateQuantity,
+        clearCart,
         toggleWishlist,
         toggleSaveForLater,
+        moveToCart,
         isInCart,
         isWishlisted,
         isSaved,
-        cartCount: cart.length
+        cartCount,
+        getQuantity
       }}
     >
       {children}

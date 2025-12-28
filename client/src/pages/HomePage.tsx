@@ -6,6 +6,7 @@ import { ComparisonWidget } from '@/components/comparison/ComparisonWidget';
 import { useProducts } from '@/hooks/useProducts';
 import { useCart } from '@/context/CartContext';
 import { useComparison } from '@/context/ComparisonContext';
+import { useToast } from '@/context/ToastContext';
 
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -31,6 +32,8 @@ export const HomePage: React.FC = () => {
     isInComparison
   } = useComparison();
 
+  const toast = useToast();
+
   const handleAddIngredient = (e: React.FormEvent) => {
     e.preventDefault();
     if (ingredientInput) {
@@ -43,7 +46,7 @@ export const HomePage: React.FC = () => {
     try {
       await runSafetyAudit(product);
     } catch {
-      alert('Safety audit is currently unavailable.');
+      toast.error('Safety audit is currently unavailable.');
     }
   };
 
@@ -51,7 +54,7 @@ export const HomePage: React.FC = () => {
     if (comparisonList.length === 1 && comparisonList[0].id !== product.id) {
       runComparison(comparisonList[0], product)
         .then(() => navigate('/compare'))
-        .catch(() => alert('AI Analysis is currently unavailable.'));
+        .catch(() => toast.error('AI Analysis is currently unavailable.'));
     } else {
       toggleProductInComparison(product);
     }

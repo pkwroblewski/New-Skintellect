@@ -6,9 +6,12 @@ export interface Product {
   price: number;
   ingredients: string[];
   imageUrl: string;
-  rating: number;
-  size: string;
-  description: string;
+  rating?: number;
+  size?: string;
+  description?: string;
+  keyIngredients?: string[];
+  fullIngredients?: string;
+  efficacyScore?: number;
 }
 
 export interface AIAnalysis {

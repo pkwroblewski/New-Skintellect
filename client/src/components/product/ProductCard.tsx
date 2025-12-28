@@ -252,10 +252,31 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           ))}
         </div>
 
-        <div className="flex gap-2 pt-4">
+        <div className="flex gap-2 pt-4 hidden sm:flex">
           <div className="w-1 h-1 rounded-full bg-[#A67C7C] opacity-30 group-hover:opacity-100 transition-opacity"></div>
           <div className="w-1 h-1 rounded-full bg-[#A67C7C] opacity-10 group-hover:opacity-100 transition-opacity delay-75"></div>
           <div className="w-1 h-1 rounded-full bg-[#A67C7C] opacity-5 group-hover:opacity-100 transition-opacity delay-150"></div>
+        </div>
+
+        {/* Mobile Quick Actions - Always visible on touch devices */}
+        <div className="flex gap-2 pt-4 sm:hidden">
+          <button
+            onClick={(e) => { e.stopPropagation(); onAddToCart?.(product.id); }}
+            className="flex-1 flex items-center justify-center gap-2 py-3 bg-slate-900 text-white rounded-full text-[10px] font-bold uppercase tracking-[0.15em] hover:bg-[#A67C7C] transition-colors"
+          >
+            <ShoppingBag size={14} />
+            Add to Cart
+          </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); onToggleWishlist?.(product.id); }}
+            className={`p-3 rounded-full border transition-all ${
+              isWishlisted
+                ? 'bg-[#FDF2F2] border-[#A67C7C] text-[#A67C7C]'
+                : 'border-slate-200 text-slate-400'
+            }`}
+          >
+            <Heart size={16} fill={isWishlisted ? 'currentColor' : 'none'} />
+          </button>
         </div>
       </div>
     </div>

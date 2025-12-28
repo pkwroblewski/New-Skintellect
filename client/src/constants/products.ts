@@ -122,3 +122,6 @@ export const MOCK_PRODUCTS: Product[] = [
     description: 'A fast-absorbing, rich moisturizer that provides instant hydration.'
   }
 ];
+
+// Alias for backward compatibility
+export const products = MOCK_PRODUCTS;
