@@ -1,0 +1,116 @@
+/* Custom fonts - must be first */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+
+@import "tailwindcss";
+
+/* Skintellect Brand Theme */
+@theme inline {
+  /* Colors */
+  --color-cream-50: #FDFCFA;
+  --color-cream-100: #FAF7F2;
+  --color-cream-200: #F5F2ED;
+  --color-cream-300: #E8E2D9;
+
+  --color-rose-soft: #A67C7C;
+  --color-rose-light: #FDF2F2;
+
+  --color-japandi-blue: #F0F4F8;
+
+  /* Fonts */
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+
+  /* Animations */
+  --animate-spin-slow: spin 15s linear infinite;
+  --animate-shimmer: shimmer 2s infinite;
+  --animate-progress-indefinite: progress-indefinite 1.5s ease-in-out infinite;
+  --animate-gentle-pulse: gentle-pulse 2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes progress-indefinite {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes gentle-pulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.08); }
+}
+
+/* Base styles */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  background-color: #FAF7F2;
+  color: #1e293b;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-serif {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+/* Hide scrollbars but keep functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Brand color utilities */
+.bg-japandi-pink {
+  background-color: #FDF2F2;
+}
+
+.bg-japandi-blue {
+  background-color: #F0F4F8;
+}
+
+.text-soft-rose {
+  color: #A67C7C;
+}
+
+.border-soft-cream {
+  border-color: #E8E2D9;
+}
+
+/* Hero gradient */
+.hero-gradient {
+  background: linear-gradient(135deg, #FAF7F2 0%, #FDF2F2 100%);
+}
+
+/* Custom animations */
+.animate-spin-slow {
+  animation: spin 15s linear infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+.animate-progress-indefinite {
+  animation: progress-indefinite 1.5s ease-in-out infinite;
+  width: 50%;
+}
+
+.animate-gentle-pulse {
+  animation: gentle-pulse 2s ease-in-out infinite;
+}
+
+/* Selection color matching brand */
+::selection {
+  background-color: #FDF2F2;
+  color: #A67C7C;
+}

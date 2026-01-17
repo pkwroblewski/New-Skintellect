@@ -1,20 +1,34 @@
 {
-  "name": "skintellect-ai",
-  "private": true,
+  "name": "skintellect",
   "version": "1.0.0",
-  "description": "AI-powered cosmetics marketplace for finding product dupes and analyzing ingredients",
+  "private": true,
+  "description": "AI-powered skincare comparison platform - Find dupes, analyze ingredients, make informed decisions",
   "scripts": {
-    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
-    "dev:client": "npm run dev --prefix client",
-    "dev:server": "npm run dev --prefix server",
-    "build": "npm run build --prefix client && npm run build --prefix server",
-    "build:client": "npm run build --prefix client",
-    "build:server": "npm run build --prefix server",
-    "install:all": "npm install && npm install --prefix client && npm install --prefix server",
-    "typecheck": "npm run typecheck --prefix client && npm run typecheck --prefix server"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "lucide-react": "^0.562.0",
+    "next": "16.1.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "server-only": "^0.0.1",
+    "zod": "^4.2.1",
+    "zustand": "^5.0.9"
   },
   "devDependencies": {
-    "concurrently": "^9.1.0"
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "babel-plugin-react-compiler": "1.0.0",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.1",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   },
   "engines": {
     "node": ">=18.0.0"

@@ -1,283 +1,221 @@
-# CLAUDE.md - Skintellect AI Project Guidelines
+# CLAUDE.md - Skintellect Project Guidelines
 
 ## Project Overview
 
-Skintellect AI is an AI-powered cosmetics and beauty marketplace that helps users find product dupes, analyze ingredients, and make informed skincare decisions. Inspired by skinskoolbeauty.com.
+Skintellect is an AI-powered skincare comparison platform that helps users find product dupes, analyze ingredients, and make informed skincare decisions. Built with Next.js 16 App Router for optimal SEO and single-deployment simplicity.
+
+**Live URL:** https://skintellect-next.vercel.app
 
 ## Tech Stack
 
-### Frontend
-- **Framework**: React 19 with TypeScript
-- **Build Tool**: Vite 6
-- **Styling**: Tailwind CSS (utility-first)
+- **Framework**: Next.js 16 with App Router
+- **Language**: TypeScript (strict mode)
+- **Styling**: Tailwind CSS 4 (CSS-first configuration)
+- **State Management**: Zustand with localStorage persistence
+- **AI Integration**: Google Gemini API (server-side only)
 - **Icons**: Lucide React
-- **State Management**: React Context + Zustand (for complex state)
-- **Routing**: React Router v6
-
-### Backend
-- **Runtime**: Node.js with Express
-- **API**: RESTful endpoints
-- **AI Integration**: Google Gemini API (proxied through backend)
-
-### Database (Future)
-- Supabase (PostgreSQL) for products, users, reviews
+- **Validation**: Zod
+- **Deployment**: Vercel (single deployment)
 
 ## Project Structure
 
 ```
 /
-├── CLAUDE.md                 # This file - project rules
-├── README.md                 # Project documentation
-├── package.json              # Root package.json (monorepo scripts)
+├── CLAUDE.md                    # This file - project guidelines
+├── README.md                    # Project documentation
+├── package.json                 # Dependencies and scripts
+├── next.config.ts               # Next.js configuration
+├── tsconfig.json                # TypeScript configuration
+├── postcss.config.mjs           # PostCSS for Tailwind
+├── eslint.config.mjs            # ESLint configuration
+├── .env.local                   # Environment variables (NEVER commit)
 │
-├── client/                   # Frontend React application
-│   ├── public/               # Static assets
-│   ├── src/
-│   │   ├── components/       # React components
-│   │   │   ├── common/       # Reusable UI components (Button, Input, Modal)
-│   │   │   ├── layout/       # Layout components (Navbar, Footer)
-│   │   │   ├── product/      # Product-related components
-│   │   │   └── comparison/   # Comparison/analysis components
-│   │   ├── context/          # React Context providers
-│   │   ├── hooks/            # Custom React hooks
-│   │   ├── pages/            # Route-based page components
-│   │   ├── services/         # API client services
-│   │   ├── types/            # TypeScript type definitions
-│   │   ├── utils/            # Helper functions
-│   │   ├── constants/        # Static data, config
-│   │   ├── App.tsx           # Main App component
-│   │   ├── main.tsx          # Entry point
-│   │   └── index.css         # Global styles
-│   ├── index.html
-│   ├── vite.config.ts
-│   ├── tailwind.config.js
-│   ├── postcss.config.js
-│   └── tsconfig.json
+├── src/
+│   ├── app/                     # Next.js App Router
+│   │   ├── layout.tsx           # Root layout (fonts, providers, metadata)
+│   │   ├── page.tsx             # Home page
+│   │   ├── globals.css          # Global styles + Tailwind config
+│   │   ├── loading.tsx          # Global loading UI
+│   │   ├── not-found.tsx        # 404 page
+│   │   ├── sitemap.ts           # Dynamic sitemap generation
+│   │   ├── robots.ts            # Robots.txt generation
+│   │   │
+│   │   ├── api/                 # API Routes (server-side)
+│   │   │   ├── ai/
+│   │   │   │   ├── compare/route.ts      # POST /api/ai/compare
+│   │   │   │   └── safety-audit/route.ts # POST /api/ai/safety-audit
+│   │   │   └── health/route.ts           # GET /api/health
+│   │   │
+│   │   ├── cart/page.tsx        # Shopping cart
+│   │   ├── checkout/page.tsx    # Checkout flow
+│   │   ├── compare/page.tsx     # Product comparison results
+│   │   ├── order-confirmation/page.tsx
+│   │   ├── wishlist/page.tsx    # User wishlist
+│   │   └── saved/page.tsx       # Saved for later
+│   │
+│   ├── components/
+│   │   ├── layout/
+│   │   │   ├── Navbar.tsx       # 'use client' - navigation
+│   │   │   └── Footer.tsx       # Server component
+│   │   ├── product/
+│   │   │   └── ProductCard.tsx  # 'use client' - product display
+│   │   ├── comparison/
+│   │   │   ├── ComparisonWidget.tsx  # 'use client' - floating widget
+│   │   │   ├── AnalysisPanel.tsx     # Server component - results
+│   │   │   └── SafetyModal.tsx       # 'use client' - modal
+│   │   ├── common/
+│   │   │   ├── Toast.tsx        # 'use client' - notifications
+│   │   │   └── LoadingOverlay.tsx
+│   │   └── providers/
+│   │       └── Providers.tsx    # 'use client' - Zustand wrapper
+│   │
+│   ├── stores/                  # Zustand stores
+│   │   ├── cart-store.ts        # Cart, wishlist, saved items
+│   │   ├── comparison-store.ts  # Product comparison state
+│   │   └── toast-store.ts       # Toast notifications
+│   │
+│   ├── hooks/
+│   │   ├── useProducts.ts       # Product filtering
+│   │   └── use-hydration.ts     # SSR hydration helper
+│   │
+│   └── lib/
+│       ├── types.ts             # TypeScript interfaces
+│       ├── products.ts          # Mock product data
+│       ├── gemini.ts            # Server-only AI service
+│       └── api.ts               # Client-side fetch helpers
 │
-├── server/                   # Backend Express application
-│   ├── src/
-│   │   ├── routes/           # API route handlers
-│   │   ├── services/         # Business logic (AI, database)
-│   │   ├── middleware/       # Express middleware
-│   │   ├── utils/            # Helper functions
-│   │   └── index.ts          # Server entry point
-│   ├── package.json
-│   └── tsconfig.json
-│
-└── .env                      # Environment variables (NEVER commit)
+└── public/
+    └── favicon.svg              # Site favicon
 ```
 
 ## Design System
 
 ### IMPORTANT: Preserve Visual Design
-The frontend visual design MUST be preserved exactly as-is:
-- Color scheme (warm cream #FAF7F2, soft rose #A67C7C, etc.)
-- Typography (Cormorant Garamond serif, Plus Jakarta Sans)
-- Layout structure and spacing
-- Image styling (grayscale hover effects, aspect ratios)
-- Animation patterns (fade-in, scale, blur transitions)
+The frontend visual design MUST be preserved:
+- Warm cream backgrounds (#FAF7F2)
+- Soft rose accents (#A67C7C)
+- Serif typography for headings (Cormorant Garamond)
+- Sans-serif for body (Plus Jakarta Sans)
+- Large rounded corners (rounded-[3rem])
+- Grayscale hover effects on images
 
 ### Color Palette
 ```css
---bg-primary: #FAF7F2;        /* Warm cream background */
---bg-secondary: #FDF2F2;      /* Soft pink/japandi pink */
---bg-tertiary: #F0F4F8;       /* Soft blue/japandi blue */
---accent-primary: #A67C7C;    /* Soft rose - primary accent */
---border-soft: #E8E2D9;       /* Cream border */
---text-primary: #1e293b;      /* Slate 800 */
---text-secondary: #64748b;    /* Slate 500 */
---text-muted: #94a3b8;        /* Slate 400 */
+--color-cream-100: #FAF7F2;      /* Primary background */
+--color-cream-200: #F5F2ED;      /* Secondary background */
+--color-rose-soft: #A67C7C;      /* Primary accent */
+--color-rose-light: #FDF2F2;     /* Light accent background */
+--border-soft: #E8E2D9;          /* Subtle borders */
 ```
 
-### Typography
-- **Serif (Display)**: Cormorant Garamond - headings, prices, quotes
-- **Sans-serif (Body)**: Plus Jakarta Sans - body text, labels, buttons
+### Typography (via next/font)
+- **Serif**: Cormorant Garamond - headings, prices, quotes
+- **Sans**: Plus Jakarta Sans - body text, labels, buttons
 
-### Component Patterns
-- Buttons: Rounded-full with uppercase tracking-widest text
-- Cards: Subtle shadows, hover state with grayscale removal
-- Modals: Large rounded corners (rounded-[3rem])
-- Inputs: Underline style with border-b, no visible border
+## Key Patterns
 
-## Coding Standards
-
-### TypeScript
-- Strict mode enabled
-- All components must have explicit prop interfaces
-- Use `type` for object shapes, `interface` for component props
-- Avoid `any` - use `unknown` if type is truly unknown
-
-### React Patterns
+### Server vs Client Components
 ```tsx
-// Component structure
-interface ComponentProps {
-  prop1: string;
-  prop2?: number;
-  onAction: (id: string) => void;
+// Server Component (default) - no directive needed
+export function AnalysisPanel({ analysis }) {
+  return <div>{analysis.summary}</div>;
 }
 
-export const Component: React.FC<ComponentProps> = ({
-  prop1,
-  prop2 = 0,
-  onAction
-}) => {
-  // hooks first
-  const [state, setState] = useState();
-
-  // derived values
-  const computed = useMemo(() => {}, [deps]);
-
-  // effects
-  useEffect(() => {}, [deps]);
-
-  // handlers
-  const handleClick = () => {};
-
-  // render
-  return <div />;
-};
-```
-
-### File Naming
-- Components: PascalCase (`ProductCard.tsx`)
-- Hooks: camelCase with `use` prefix (`useProducts.ts`)
-- Utils: camelCase (`formatPrice.ts`)
-- Types: PascalCase (`Product.ts`)
-- Constants: SCREAMING_SNAKE_CASE for values, camelCase for files
-
-### Import Order
-1. React and React-related
-2. Third-party libraries
-3. Internal components
-4. Internal hooks/utils
-5. Types
-6. Styles
-
-## API Design
-
-### Backend Endpoints
-```
-POST /api/ai/compare          # Compare two products
-POST /api/ai/safety-audit     # Analyze ingredient safety
-GET  /api/products            # List products (with pagination)
-GET  /api/products/:id        # Get single product
-GET  /api/products/search     # Search products
-```
-
-### Response Format
-```typescript
-interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: {
-    code: string;
-    message: string;
-  };
+// Client Component - needs 'use client' directive
+'use client';
+export function ComparisonWidget() {
+  const router = useRouter();  // Client-side hooks
+  return <button onClick={() => router.push('/compare')}>Compare</button>;
 }
 ```
 
-### Error Handling
-- Never expose internal errors to client
-- Log full errors server-side
-- Return user-friendly messages
-- Use appropriate HTTP status codes
+### Zustand with Hydration
+```tsx
+// In stores/cart-store.ts
+export const useCartStore = create<CartStore>()(
+  persist(
+    (set, get) => ({ /* state and actions */ }),
+    { name: 'skintellect-cart-v2' }
+  )
+);
+
+// In components - use hydration hook to avoid SSR mismatch
+const hydrated = useHydration();
+const cartCount = useCartStore((state) => state.getCartCount());
+if (!hydrated) return <Skeleton />;
+```
+
+### API Routes
+```tsx
+// app/api/ai/compare/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { compareProducts } from '@/lib/gemini';
+
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+  // Validate with Zod, call Gemini, return response
+  const analysis = await compareProducts(body.source, body.target);
+  return NextResponse.json({ success: true, data: analysis });
+}
+```
 
 ## Security Rules
 
 ### CRITICAL - API Keys
-- **NEVER** expose API keys in frontend code
-- **NEVER** commit `.env` files
-- All external API calls go through backend proxy
-- Use environment variables for all secrets
+- **NEVER** expose `GEMINI_API_KEY` in client code
+- API key is only used in `lib/gemini.ts` which has `import 'server-only'`
+- All AI calls go through `/api/ai/*` routes
 
-### Input Validation
-- Sanitize all user inputs
-- Validate on both client and server
-- Use parameterized queries for database
-
-### Authentication (When Implemented)
-- Use HTTP-only cookies for sessions
-- Implement CSRF protection
-- Rate limit auth endpoints
-
-## Git Workflow
-
-### Branch Naming
-- `feature/` - new features
-- `fix/` - bug fixes
-- `refactor/` - code improvements
-- `chore/` - maintenance tasks
-
-### Commit Messages
-Format: `type(scope): description`
-
-Examples:
-- `feat(api): add product comparison endpoint`
-- `fix(ui): correct mobile navigation toggle`
-- `refactor(hooks): extract useCart from App`
-
-### Files to Never Commit
-- `.env`, `.env.local`, `.env.production`
-- `node_modules/`
-- `dist/`, `build/`
-- `.DS_Store`
-- API keys, secrets, credentials
-
-## Testing Guidelines
-
-### Unit Tests
-- Test utility functions
-- Test custom hooks with @testing-library/react-hooks
-- Mock external services
-
-### Component Tests
-- Use React Testing Library
-- Test user interactions, not implementation
-- Prefer queries by role/label over test IDs
-
-### E2E Tests (Future)
-- Playwright for critical user flows
-- Test: search, compare, add to cart
-
-## Performance Guidelines
-
-- Use React.lazy() for route-based code splitting
-- Optimize images (WebP format, srcset)
-- Debounce search inputs (300ms)
-- Memoize expensive computations
-- Virtualize long lists (>50 items)
+### Environment Variables
+```bash
+# .env.local (NEVER commit)
+GEMINI_API_KEY=your_key_here
+```
 
 ## Common Commands
 
 ```bash
 # Development
-npm run dev           # Start both client and server
-npm run dev:client    # Start frontend only
-npm run dev:server    # Start backend only
+npm run dev          # Start dev server on http://localhost:3000
 
-# Build
-npm run build         # Build for production
-npm run preview       # Preview production build
+# Build & Deploy
+npm run build        # Create production build
+npm run start        # Start production server locally
+vercel --prod        # Deploy to Vercel production
 
-# Quality
-npm run lint          # Run ESLint
-npm run typecheck     # Run TypeScript compiler
-npm run test          # Run tests
+# Code Quality
+npm run lint         # Run ESLint
 ```
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /api/ai/compare | Compare two products using Gemini AI |
+| POST | /api/ai/safety-audit | Analyze ingredient safety |
+| GET | /api/health | Health check endpoint |
+
+## Deployment
+
+- **Platform**: Vercel
+- **URL**: https://skintellect-next.vercel.app
+- **Environment Variables**: Set `GEMINI_API_KEY` in Vercel dashboard
 
 ## Troubleshooting
 
-### "API key not found" error
-1. Check `.env` file exists in server directory
-2. Ensure `GEMINI_API_KEY` is set
-3. Restart the server after changes
+### Hydration Mismatch
+Use the `useHydration` hook when accessing persisted Zustand stores:
+```tsx
+const hydrated = useHydration();
+if (!hydrated) return <LoadingState />;
+```
 
-### "CORS error" in browser
-1. Check server is running on correct port
-2. Verify CORS middleware is configured
-3. Ensure API URL matches in client config
+### API Key Not Working
+1. Check `.env.local` exists with `GEMINI_API_KEY`
+2. Restart dev server after changing env vars
+3. For production, verify env var is set in Vercel dashboard
 
-### "Module not found" errors
-1. Run `npm install` in both client and server
-2. Check import paths are correct
-3. Restart TypeScript server in IDE
+### Build Errors
+1. Run `npm install` to ensure dependencies are installed
+2. Check TypeScript errors with `npx tsc --noEmit`
+3. Verify all 'use client' directives are at top of file
