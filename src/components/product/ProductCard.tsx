@@ -8,18 +8,12 @@ import {
   ArrowRightLeft,
   ShieldAlert,
   Loader2,
-  Droplets,
-  Zap,
-  Wind,
-  Shield,
-  Sun,
-  FlaskConical,
   Heart,
   ShoppingBag,
-  Bookmark,
-  type LucideIcon
+  Bookmark
 } from 'lucide-react';
 import type { Product } from '@/lib/types';
+import { getIngredientBenefit } from '@/lib/ingredients';
 
 interface ProductCardProps {
   product: Product;
@@ -35,32 +29,6 @@ interface ProductCardProps {
   isSelectedForComparison?: boolean;
   isActionLoading?: boolean;
 }
-
-interface IngredientBenefit {
-  label: string;
-  icon: LucideIcon;
-}
-
-// Utility to map ingredients to benefit categories
-const getIngredientBenefit = (ingredient: string): IngredientBenefit => {
-  const ing = ingredient.toLowerCase();
-  if (ing.includes('retinol') || ing.includes('peptide') || ing.includes('retinoid') || ing.includes('bakuchiol')) {
-    return { label: 'Renewal', icon: Zap };
-  }
-  if (ing.includes('hyaluronic') || ing.includes('glycerin') || ing.includes('aloe') || ing.includes('hydra')) {
-    return { label: 'Hydration', icon: Droplets };
-  }
-  if (ing.includes('ceramide') || ing.includes('squalane') || ing.includes('shea') || ing.includes('barrier') || ing.includes('cholesterol')) {
-    return { label: 'Barrier', icon: Shield };
-  }
-  if (ing.includes('oat') || ing.includes('centella') || ing.includes('green tea') || ing.includes('bisabolol') || ing.includes('niacinamide')) {
-    return { label: 'Soothing', icon: Wind };
-  }
-  if (ing.includes('spf') || ing.includes('sun') || ing.includes('avobenzone') || ing.includes('octisalate')) {
-    return { label: 'Protection', icon: Sun };
-  }
-  return { label: 'Essential', icon: FlaskConical };
-};
 
 export function ProductCard({
   product,
@@ -80,9 +48,7 @@ export function ProductCard({
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const handleCardClick = () => {
-    if (onView) {
-      onView(product);
-    }
+    onView?.(product);
     router.push(`/product/${product.id}`);
   };
 

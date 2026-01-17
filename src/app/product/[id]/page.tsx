@@ -1,6 +1,6 @@
 'use client';
 
-import { notFound, useRouter } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { use, useState } from 'react';
 import {
@@ -11,48 +11,14 @@ import {
   ShieldAlert,
   ArrowRightLeft,
   Star,
-  Droplets,
-  Zap,
-  Wind,
-  Shield,
-  Sun,
-  FlaskConical,
-  Loader2,
-  type LucideIcon
+  Loader2
 } from 'lucide-react';
 import { getProductById, getProductsByCategory } from '@/lib/products';
+import { getIngredientBenefit } from '@/lib/ingredients';
 import { useCartStore } from '@/stores/cart-store';
 import { useComparisonStore } from '@/stores/comparison-store';
 import { useToastStore } from '@/stores/toast-store';
 import { useHydration } from '@/hooks/use-hydration';
-import type { Product } from '@/lib/types';
-
-interface IngredientBenefit {
-  label: string;
-  description: string;
-  icon: LucideIcon;
-}
-
-// Map ingredients to benefit categories with descriptions
-const getIngredientBenefit = (ingredient: string): IngredientBenefit => {
-  const ing = ingredient.toLowerCase();
-  if (ing.includes('retinol') || ing.includes('peptide') || ing.includes('retinoid') || ing.includes('bakuchiol')) {
-    return { label: 'Renewal', description: 'Promotes cell turnover and skin regeneration', icon: Zap };
-  }
-  if (ing.includes('hyaluronic') || ing.includes('glycerin') || ing.includes('aloe') || ing.includes('hydra')) {
-    return { label: 'Hydration', description: 'Deeply moisturizes and plumps skin', icon: Droplets };
-  }
-  if (ing.includes('ceramide') || ing.includes('squalane') || ing.includes('shea') || ing.includes('barrier') || ing.includes('cholesterol')) {
-    return { label: 'Barrier', description: 'Strengthens and protects the skin barrier', icon: Shield };
-  }
-  if (ing.includes('oat') || ing.includes('centella') || ing.includes('green tea') || ing.includes('bisabolol') || ing.includes('niacinamide')) {
-    return { label: 'Soothing', description: 'Calms irritation and reduces redness', icon: Wind };
-  }
-  if (ing.includes('spf') || ing.includes('sun') || ing.includes('avobenzone') || ing.includes('octisalate') || ing.includes('homosalate') || ing.includes('octocrylene')) {
-    return { label: 'Protection', description: 'Shields from UV and environmental damage', icon: Sun };
-  }
-  return { label: 'Essential', description: 'Supports overall skin health', icon: FlaskConical };
-};
 
 function LoadingSkeleton() {
   return (
@@ -75,7 +41,6 @@ function LoadingSkeleton() {
 
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
-  const router = useRouter();
   const hydrated = useHydration();
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -155,10 +120,6 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
     } catch {
       toast.error('Safety audit is currently unavailable.');
     }
-  };
-
-  const handleRelatedProductClick = (relatedProduct: Product) => {
-    router.push(`/product/${relatedProduct.id}`);
   };
 
   return (
@@ -377,10 +338,10 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {relatedProducts.map((related) => (
-                <div
+                <Link
                   key={related.id}
-                  onClick={() => handleRelatedProductClick(related)}
-                  className="bg-white rounded-[2rem] overflow-hidden cursor-pointer group hover:shadow-lg transition-all"
+                  href={`/product/${related.id}`}
+                  className="bg-white rounded-[2rem] overflow-hidden group hover:shadow-lg transition-all"
                 >
                   <div className="aspect-[4/5] overflow-hidden">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -401,7 +362,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                       ${related.price.toFixed(2)}
                     </span>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
